@@ -75,7 +75,6 @@ std::string json::utils::Lexer::collect_string()
 std::string json::utils::Lexer::collect_int()
 {
 	std::string integer;
-	advance();
 
 	while (isdigit(current_char) && index < contents.size() && current_char != '\n')
 	{
@@ -83,6 +82,5 @@ std::string json::utils::Lexer::collect_int()
 		advance();
 	}
 
-	advance();
 	return integer;
 }

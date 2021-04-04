@@ -15,14 +15,17 @@ int main()
 
 	f.close();
 
-	json::utils::Lexer lexer(ss.str());
+	/*json::utils::Lexer lexer(ss.str());
 
 	json::utils::Token t(json::utils::TokenType::TOKEN_INT, "");
 
 	while ((t = lexer.next_token()).type != json::utils::TokenType::TOKEN_EOF)
 	{
 		std::cout << t.value << "\n";
-	}
+	}*/
+
+	json::utils::Parser parser(ss.str());
+	parser.parse();
 
 	return 0;
 }
