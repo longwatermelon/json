@@ -83,6 +83,8 @@ void args::cmd_parse(int argc, char** argv)
 
 void args::help_parse()
 {
+	std::cout << "-s <selected key>: prints out json value at the specified key\n";
+	exit(0);
 }
 
 
