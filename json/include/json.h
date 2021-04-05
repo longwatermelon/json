@@ -1,6 +1,6 @@
 #pragma once
 #include "parser.h"
-#include <variant>
+#include <any>
 
 
 namespace json
@@ -49,6 +49,8 @@ namespace json
 
 			pairs[key] = std::move(val);
 		}
+
+		std::unique_ptr<utils::Node>& get_raw(const std::string& key);
 
 	private:
 		std::map<std::string, std::unique_ptr<utils::Node>> pairs;

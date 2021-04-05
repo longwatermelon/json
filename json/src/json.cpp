@@ -7,6 +7,12 @@ json::Json::Json(std::map<std::string, std::unique_ptr<utils::Node>>& pairs)
 	: pairs(std::move(pairs)) {}
 
 
+std::unique_ptr<json::utils::Node>& json::Json::get_raw(const std::string& key)
+{
+	return pairs[key];
+}
+
+
 json::Json json::load_json_string(const std::string& json_string)
 {
 	utils::Parser parser(json_string);
