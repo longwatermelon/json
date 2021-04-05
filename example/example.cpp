@@ -6,15 +6,6 @@
 
 int main()
 {
-	std::string path = "example.json";
-	std::ifstream f(path);
-	std::stringstream ss;
-	std::string line;
-
-	while (std::getline(f, line)) ss << line << "\n";
-
-	f.close();
-
 	json::Json dumped;
 	dumped.set("key", 1);
 	dumped.set("key 1", std::string("value")); // c style strings dont work, std::string() is required
