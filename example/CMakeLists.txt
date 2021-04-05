@@ -5,3 +5,4 @@ add_executable(example
 )
 
 target_link_libraries(example json)
+target_include_directories(example PUBLIC ${CMAKE_SOURCE_DIR})
