@@ -15,17 +15,15 @@ int main()
 
 	f.close();
 
-	/*json::utils::Lexer lexer(ss.str());
+	json::Json dumped;
+	dumped.set("key", 1);
+	dumped.set("key 1", std::string("value")); // c style strings dont work, std::string() is required
 
-	json::utils::Token t(json::utils::TokenType::TOKEN_INT, "");
+	json::dump("example.json", dumped);
 
-	while ((t = lexer.next_token()).type != json::utils::TokenType::TOKEN_EOF)
-	{
-		std::cout << t.value << "\n";
-	}*/
+	json::Json loaded = json::load_from_path("example.json");
 
-	json::utils::Parser parser(ss.str());
-	parser.parse();
+	std::cout << loaded.get<int>("key") << " " << loaded.get<std::string>("key 1") << "\n";
 
 	return 0;
 }
