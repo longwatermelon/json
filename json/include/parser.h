@@ -10,10 +10,10 @@ namespace json::utils
 	class Parser
 	{
 	public:
-		Lexer lexer;
-		Token current_token;
+		Lexer m_lexer;
+		Token m_current_token;
 
-		std::map<std::string, std::unique_ptr<Node>> map;
+		std::map<std::string, std::unique_ptr<Node>> m_map;
 
 		Parser(const std::string& contents);
 

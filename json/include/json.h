@@ -15,16 +15,16 @@ namespace json
 		template <typename T>
 		T& get(const std::string& key)
 		{
-			if (pairs.count(key) == 0)
+			if (m_pairs.count(key) == 0)
 			{
 				throw std::runtime_error(key + " is not an existing key\n");
 			}
 
 			if constexpr (std::is_same_v<T, int>)
-				return pairs[key]->int_value;
+				return m_pairs[key]->int_value;
 
 			if constexpr (std::is_same_v<T, std::string>)
-				return pairs[key]->string_value;
+				return m_pairs[key]->string_value;
 		}
 
 		template <typename T>
@@ -47,13 +47,13 @@ namespace json
 				return;
 			}
 
-			pairs[key] = std::move(val);
+			m_pairs[key] = std::move(val);
 		}
 
 		std::unique_ptr<utils::Node>& get_raw(const std::string& key);
 
 	private:
-		std::map<std::string, std::unique_ptr<utils::Node>> pairs;
+		std::map<std::string, std::unique_ptr<utils::Node>> m_pairs;
 
 		friend void dump(const std::string& fp, const Json& obj);
 	};

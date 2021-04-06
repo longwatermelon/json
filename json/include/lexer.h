@@ -9,12 +9,12 @@ namespace json::utils
 	class Lexer
 	{
 	public:
-		std::string contents;
+		std::string m_contents;
 
-		size_t index{ 0 };
-		char current_char{ ' ' };
+		size_t m_index{ 0 };
+		char m_current_char{ ' ' };
 
-		size_t nline{ 0 };
+		size_t m_nline{ 0 };
 
 		Lexer() = default;
 

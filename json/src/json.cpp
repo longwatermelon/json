@@ -4,12 +4,12 @@
 
 
 json::Json::Json(std::map<std::string, std::unique_ptr<utils::Node>>& pairs)
-	: pairs(std::move(pairs)) {}
+	: m_pairs(std::move(pairs)) {}
 
 
 std::unique_ptr<json::utils::Node>& json::Json::get_raw(const std::string& key)
 {
-	return pairs[key];
+	return m_pairs[key];
 }
 
 
@@ -18,7 +18,7 @@ json::Json json::load_json_string(const std::string& json_string)
 	utils::Parser parser(json_string);
 	parser.parse();
 
-	return Json(parser.map);
+	return Json(parser.m_map);
 }
 
 
@@ -41,7 +41,7 @@ void json::dump(const std::string& fp, const Json& obj)
 	std::ofstream f(fp, std::ofstream::out | std::ofstream::trunc);
 	std::string output = "{\n\t";
 
-	for (const auto& pair : obj.pairs)
+	for (const auto& pair : obj.m_pairs)
 	{
 		std::string key = '"' + pair.first + '"';
 

@@ -3,21 +3,21 @@
 
 json::utils::Parser::Parser(const std::string& contents)
 {
-	lexer = Lexer(contents);
-	current_token = lexer.next_token();
+	m_lexer = Lexer(contents);
+	m_current_token = m_lexer.next_token();
 }
 
 
 void json::utils::Parser::eat(TokenType type)
 {
-	if (current_token.type != type)
+	if (m_current_token.type != type)
 	{
 		std::stringstream ss;
-		ss << "unexpected token '" << current_token.value << "' at line " << lexer.nline << "\n";
+		ss << "unexpected token '" << m_current_token.value << "' at line " << m_lexer.m_nline << "\n";
 		throw std::runtime_error(ss.str());
 	}
 
-	current_token = lexer.next_token();
+	m_current_token = m_lexer.next_token();
 }
 
 
@@ -26,22 +26,22 @@ void json::utils::Parser::parse()
 	eat(TokenType::TOKEN_LBRACE);
 
 	std::unique_ptr<Node> pair = parse_pair();
-	map[pair->pair_first] = std::move(pair->pair_second);
+	m_map[pair->pair_first] = std::move(pair->pair_second);
 
-	while (lexer.index < lexer.contents.size())
+	while (m_lexer.m_index < m_lexer.m_contents.size())
 	{
 		pair = parse_pair();
 
 		if (!pair) break;
 		
-		map[pair->pair_first] = std::move(pair->pair_second);
+		m_map[pair->pair_first] = std::move(pair->pair_second);
 	}
 }
 
 
 std::unique_ptr<json::utils::Node> json::utils::Parser::parse_expr()
 {
-	switch (current_token.type)
+	switch (m_current_token.type)
 	{
 	case TokenType::TOKEN_INT: return parse_int();
 	case TokenType::TOKEN_STRING: return parse_string();
@@ -62,7 +62,7 @@ std::unique_ptr<json::utils::Node> json::utils::Parser::parse_pair()
 	pair->pair_first = key->string_value;
 	pair->pair_second = std::move(value);
 
-	if (current_token.type != TokenType::TOKEN_COMMA)
+	if (m_current_token.type != TokenType::TOKEN_COMMA)
 	{
 		eat(TokenType::TOKEN_RBRACE);
 	}
@@ -79,7 +79,7 @@ std::unique_ptr<json::utils::Node> json::utils::Parser::parse_key()
 {
 	std::unique_ptr<Node> key = std::make_unique<Node>(NodeType::NODE_STRING);
 
-	key->string_value = current_token.value;
+	key->string_value = m_current_token.value;
 
 	eat(TokenType::TOKEN_STRING);
 	return key;
@@ -95,7 +95,7 @@ std::unique_ptr<json::utils::Node> json::utils::Parser::parse_value()
 std::unique_ptr<json::utils::Node> json::utils::Parser::parse_int()
 {
 	std::unique_ptr<Node> node_int = std::make_unique<Node>(NodeType::NODE_INT);
-	std::stringstream(current_token.value) >> node_int->int_value;
+	std::stringstream(m_current_token.value) >> node_int->int_value;
 	eat(TokenType::TOKEN_INT);
 
 	return node_int;
@@ -105,7 +105,7 @@ std::unique_ptr<json::utils::Node> json::utils::Parser::parse_int()
 std::unique_ptr<json::utils::Node> json::utils::Parser::parse_string()
 {
 	std::unique_ptr<Node> node_str = std::make_unique<Node>(NodeType::NODE_STRING);
-	node_str->string_value = current_token.value;
+	node_str->string_value = m_current_token.value;
 	eat(TokenType::TOKEN_STRING);
 
 	return node_str;
