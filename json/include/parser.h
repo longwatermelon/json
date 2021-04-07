@@ -28,5 +28,6 @@ namespace json::utils
 
 		std::unique_ptr<Node> parse_int();
 		std::unique_ptr<Node> parse_string();
+		std::unique_ptr<Node> parse_list();
 	};
 }

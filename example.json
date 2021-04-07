@@ -1,5 +1,11 @@
 {
-	"UwU": "Your Mother",
-	"key": 1,
-	"key 1": "value"
+	"key": 300,
+	"key 1": "text",
+	"key 3": 100,
+	"test": [
+		"first",
+		300,
+		503,
+		"another string"
+	]
 }

@@ -17,7 +17,8 @@ namespace json::utils
 	enum class LiteralType
 	{
 		INT,
-		STRING
+		STRING,
+		LIST
 	};
 
 	
@@ -46,6 +47,7 @@ namespace json::utils
 			{
 			case 0: literal_type = LiteralType::STRING; break;
 			case 1: literal_type = LiteralType::INT; break;
+			case 2: literal_type = LiteralType::LIST; break;
 			}
 		}
 	};

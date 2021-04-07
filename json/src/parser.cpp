@@ -46,6 +46,7 @@ std::unique_ptr<json::utils::Node> json::utils::Parser::parse_expr()
 	{
 	case TokenType::TOKEN_INT: return parse_int();
 	case TokenType::TOKEN_STRING: return parse_string();
+	case TokenType::TOKEN_LBRACKET: return parse_list();
 	}
 
 	return nullptr;
@@ -113,4 +114,34 @@ std::unique_ptr<json::utils::Node> json::utils::Parser::parse_string()
 	eat(TokenType::TOKEN_STRING);
 
 	return node_str;
+}
+
+
+std::unique_ptr<json::utils::Node> json::utils::Parser::parse_list()
+{
+	std::unique_ptr<Node> list = std::make_unique<Node>(NodeType::NODE_LITERAL);
+	list->literal_type = LiteralType::LIST;
+	list->literal_value = vector();
+
+	eat(TokenType::TOKEN_LBRACKET);
+
+	vector& vec = std::get<vector>(list->literal_value);
+
+	while (m_current_token.type != TokenType::TOKEN_RBRACKET)
+	{
+		switch (m_current_token.type)
+		{
+		case TokenType::TOKEN_INT: vec.append(std::stoi(m_current_token.value)); break;
+		default: vec.append(m_current_token.value); break;
+		}
+
+		eat(m_current_token.type);
+
+		if (m_current_token.type == TokenType::TOKEN_RBRACKET) break;
+		else eat(TokenType::TOKEN_COMMA);
+	}
+
+	eat(TokenType::TOKEN_RBRACKET);
+
+	return list;
 }

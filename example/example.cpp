@@ -14,9 +14,10 @@ int main()
 	std::cout << std::get<int>(j["key"]) << "\n";
 	int bar = std::get<int>(j["key"]);
 
-	j.get_raw("UwU") = std::string("Your Mother");
+	json::vector vec = std::get<json::vector>(j["test"]);
+	std::cout << std::get<std::string>(vec[0]) << "\n";
 
-	json::dump("example.json", j);
+	j.get_raw("key 3") = 100;
 
 	return 0;
 }
