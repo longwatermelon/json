@@ -2,6 +2,7 @@
 #include "json/include/json.h"
 #include <iostream>
 #include <fstream>
+#include <variant>
 
 
 void args::parse_args(int argc, char** argv)
@@ -22,12 +23,12 @@ void args::parse_args(int argc, char** argv)
 			return;
 		}
 
-		std::unique_ptr<json::utils::Node>& value = loaded.get_raw(parse::selected_key);
+		json::utils::Node& value = loaded.get_raw(parse::selected_key);
 
-		switch (value->type)
+		switch (value.literal_type)
 		{
-		case json::utils::NodeType::NODE_INT: std::cout << value->int_value << "\n"; break;
-		case json::utils::NodeType::NODE_STRING: std::cout << value->string_value << "\n"; break;
+		case json::utils::LiteralType::INT: std::cout << std::get<int>(value.literal_value) << "\n"; break;
+		case json::utils::LiteralType::STRING: std::cout << std::get<std::string>(value.literal_value) << "\n"; break;
 		}
 	}
 }

@@ -7,9 +7,33 @@ json::Json::Json(std::map<std::string, std::unique_ptr<utils::Node>>& pairs)
 	: m_pairs(std::move(pairs)) {}
 
 
-std::unique_ptr<json::utils::Node>& json::Json::get_raw(const std::string& key)
+std::variant<std::string, int>& json::Json::operator[](const std::string& key)
 {
-	return m_pairs[key];
+	if (m_pairs.count(key) == 0)
+	{
+		using namespace json::utils;
+		std::unique_ptr<Node> node = std::make_unique<Node>(NodeType::NODE_LITERAL);
+		m_pairs[key] = std::move(node);
+
+		return m_pairs[key]->literal_value;
+	}
+	else
+	{
+		return m_pairs[key]->literal_value;
+	}
+}
+
+json::utils::Node& json::Json::get_raw(const std::string& key)
+{
+	if (m_pairs.count(key) == 0)
+	{
+		using namespace json::utils;
+		std::unique_ptr<Node> node = std::make_unique<Node>(NodeType::NODE_LITERAL);
+		m_pairs[key] = std::move(node);
+
+	}
+
+	return *(m_pairs[key].get());
 }
 
 
@@ -47,11 +71,11 @@ void json::dump(const std::string& fp, const Json& obj)
 
 		std::stringstream val;
 
-		if (pair.second->type == utils::NodeType::NODE_STRING)
-			val << '"' << pair.second->string_value << '"';
+		if (pair.second->literal_type == utils::LiteralType::STRING)
+			val << '"' << std::get<std::string>(pair.second->literal_value) << '"';
 
-		else if (pair.second->type == utils::NodeType::NODE_INT)
-			val << pair.second->int_value;
+		else if (pair.second->literal_type == utils::LiteralType::INT)
+			val << std::get<int>(pair.second->literal_value);
 
 		std::stringstream ss;
 		ss << key << ": " << val.str() << ",\n\t";

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <variant>
 
 
 namespace json::utils
@@ -8,11 +9,17 @@ namespace json::utils
 	enum class NodeType
 	{
 		NODE_PAIR,
-		NODE_STRING,
-		NODE_INT,
+		NODE_LITERAL,
 		NODE_NOOP
 	};
 
+	enum class LiteralType
+	{
+		INT,
+		STRING
+	};
+
+	
 
 	class Node
 	{
@@ -26,10 +33,19 @@ namespace json::utils
 		std::string pair_first;
 		std::unique_ptr<Node> pair_second;
 
-		// string
-		std::string string_value;
+		// literal
+		std::variant<std::string, int> literal_value;
+		LiteralType literal_type{ LiteralType::INT };
 
-		// int
-		int int_value{ 0 };
+		void operator=(const std::variant<std::string, int>& v)
+		{
+			literal_value = v;
+
+			switch (v.index())
+			{
+			case 0: literal_type = LiteralType::STRING; break;
+			case 1: literal_type = LiteralType::INT; break;
+			}
+		}
 	};
 }

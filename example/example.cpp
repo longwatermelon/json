@@ -6,15 +6,17 @@
 
 int main()
 {
-	json::Json dumped;
-	dumped.set("key", 1);
-	dumped.set("key 1", std::string("value")); // c style strings dont work, std::string() is required
+	json::Json j = json::load_from_path("example.json");
 
-	json::dump("example.json", dumped);
+	std::cout << std::get<std::string>(j["key 1"]) << "\n";
+	std::string foo = std::get<std::string>(j["key 1"]);
 
-	json::Json loaded = json::load_from_path("example.json");
+	std::cout << std::get<int>(j["key"]) << "\n";
+	int bar = std::get<int>(j["key"]);
 
-	std::cout << loaded.get<int>("key") << " " << loaded.get<std::string>("key 1") << "\n";
+	j.get_raw("UwU") = std::string("Your Mother");
+
+	json::dump("example.json", j);
 
 	return 0;
 }

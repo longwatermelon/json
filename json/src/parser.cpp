@@ -59,7 +59,7 @@ std::unique_ptr<json::utils::Node> json::utils::Parser::parse_pair()
 	eat(TokenType::TOKEN_COLON);
 	std::unique_ptr<Node> value = parse_value();
 
-	pair->pair_first = key->string_value;
+	pair->pair_first = std::get<std::string>(key->literal_value);
 	pair->pair_second = std::move(value);
 
 	if (m_current_token.type != TokenType::TOKEN_COMMA)
@@ -77,9 +77,9 @@ std::unique_ptr<json::utils::Node> json::utils::Parser::parse_pair()
 
 std::unique_ptr<json::utils::Node> json::utils::Parser::parse_key()
 {
-	std::unique_ptr<Node> key = std::make_unique<Node>(NodeType::NODE_STRING);
+	std::unique_ptr<Node> key = std::make_unique<Node>(NodeType::NODE_LITERAL);
 
-	key->string_value = m_current_token.value;
+	key->literal_value = m_current_token.value;
 
 	eat(TokenType::TOKEN_STRING);
 	return key;
@@ -94,8 +94,10 @@ std::unique_ptr<json::utils::Node> json::utils::Parser::parse_value()
 
 std::unique_ptr<json::utils::Node> json::utils::Parser::parse_int()
 {
-	std::unique_ptr<Node> node_int = std::make_unique<Node>(NodeType::NODE_INT);
-	std::stringstream(m_current_token.value) >> node_int->int_value;
+	std::unique_ptr<Node> node_int = std::make_unique<Node>(NodeType::NODE_LITERAL);
+	node_int->literal_value = m_current_token.value;
+	node_int->literal_value = std::stoi(std::get<std::string>(node_int->literal_value));
+	node_int->literal_type = LiteralType::INT;
 	eat(TokenType::TOKEN_INT);
 
 	return node_int;
@@ -104,8 +106,9 @@ std::unique_ptr<json::utils::Node> json::utils::Parser::parse_int()
 
 std::unique_ptr<json::utils::Node> json::utils::Parser::parse_string()
 {
-	std::unique_ptr<Node> node_str = std::make_unique<Node>(NodeType::NODE_STRING);
-	node_str->string_value = m_current_token.value;
+	std::unique_ptr<Node> node_str = std::make_unique<Node>(NodeType::NODE_LITERAL);
+	node_str->literal_value = m_current_token.value;
+	node_str->literal_type = LiteralType::STRING;
 	eat(TokenType::TOKEN_STRING);
 
 	return node_str;
