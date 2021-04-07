@@ -1,5 +1,6 @@
 #pragma once
 #include "parser.h"
+#include "utils.h"
 #include <any>
 
 
@@ -12,7 +13,7 @@ namespace json
 
 		Json() = default;
 
-		std::variant<std::string, int>& operator[](const std::string& key);
+		json_variant& operator[](const std::string& key);
 
 		utils::Node& get_raw(const std::string& key);
 

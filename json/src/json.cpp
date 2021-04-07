@@ -7,7 +7,7 @@ json::Json::Json(std::map<std::string, std::unique_ptr<utils::Node>>& pairs)
 	: m_pairs(std::move(pairs)) {}
 
 
-std::variant<std::string, int>& json::Json::operator[](const std::string& key)
+json_variant& json::Json::operator[](const std::string& key)
 {
 	if (m_pairs.count(key) == 0)
 	{

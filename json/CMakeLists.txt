@@ -9,4 +9,5 @@ add_library(json
 	include/lexer.h
 	include/node.h
 	include/parser.h
+	include/utils.h
 )

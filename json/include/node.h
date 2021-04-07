@@ -1,4 +1,5 @@
 #pragma once
+#include "utils.h"
 #include <string>
 #include <memory>
 #include <variant>
@@ -34,10 +35,10 @@ namespace json::utils
 		std::unique_ptr<Node> pair_second;
 
 		// literal
-		std::variant<std::string, int> literal_value;
+		json_variant literal_value;
 		LiteralType literal_type{ LiteralType::INT };
 
-		void operator=(const std::variant<std::string, int>& v)
+		void operator=(const json_variant& v)
 		{
 			literal_value = v;
 

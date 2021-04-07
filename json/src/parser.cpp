@@ -1,4 +1,5 @@
 #include "../include/parser.h"
+#include "../include/utils.h"
 
 
 json::utils::Parser::Parser(const std::string& contents)
