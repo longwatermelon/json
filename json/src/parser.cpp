@@ -24,18 +24,32 @@ void json::utils::Parser::eat(TokenType type)
 
 void json::utils::Parser::parse()
 {
-	eat(TokenType::TOKEN_LBRACE);
-
-	std::unique_ptr<Node> pair = parse_pair();
-	m_map[pair->pair_first] = std::move(pair->pair_second);
-
-	while (m_lexer.m_index < m_lexer.m_contents.size())
+	if (m_current_token.type == TokenType::TOKEN_LBRACE)
 	{
-		pair = parse_pair();
+		eat(TokenType::TOKEN_LBRACE);
 
-		if (!pair) break;
-		
+		std::unique_ptr<Node> pair = parse_pair();
 		m_map[pair->pair_first] = std::move(pair->pair_second);
+
+		while (m_lexer.m_index < m_lexer.m_contents.size())
+		{
+			pair = parse_pair();
+
+			if (!pair) break;
+
+			m_map[pair->pair_first] = std::move(pair->pair_second);
+		}
+	}
+	else
+	{
+		std::unique_ptr<Node> list = parse_list();
+
+		vector vec = std::get<vector>(list->literal_value);
+
+		for (int i = 0; i < vec.get().size(); ++i)
+		{
+			m_list.emplace_back(vec[i]);
+		}
 	}
 }
 

@@ -14,6 +14,7 @@ namespace json::utils
 		Token m_current_token;
 
 		std::map<std::string, std::unique_ptr<Node>> m_map;
+		std::vector<json_variant> m_list;
 
 		Parser(const std::string& contents);
 

@@ -10,6 +10,7 @@ namespace args
 		inline std::string json_path;
 
 		inline std::string selected_key;
+		inline int selected_index = -1;
 	}
 
 	void parse_args(int argc, char** argv);

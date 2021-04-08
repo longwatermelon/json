@@ -7,6 +7,10 @@ json::Json::Json(std::map<std::string, std::unique_ptr<utils::Node>>& pairs)
 	: m_pairs(std::move(pairs)) {}
 
 
+json::Json::Json(std::vector<json_variant>& v)
+	: m_list(v) {}
+
+
 json_variant& json::Json::operator[](const std::string& key)
 {
 	if (m_pairs.count(key) == 0)
@@ -18,6 +22,13 @@ json_variant& json::Json::operator[](const std::string& key)
 	
 	return m_pairs[key]->literal_value;
 }
+
+
+json_variant& json::Json::operator[](int index)
+{
+	return m_list[index];
+}
+
 
 json::utils::Node& json::Json::get_raw(const std::string& key)
 {
@@ -37,7 +48,10 @@ json::Json json::load_json_string(const std::string& json_string)
 	utils::Parser parser(json_string);
 	parser.parse();
 
-	return Json(parser.m_map);
+	if (parser.m_map.size() > 0)
+		return Json(parser.m_map);
+	else
+		return Json(parser.m_list);
 }
 
 

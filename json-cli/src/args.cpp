@@ -17,18 +17,25 @@ void args::parse_args(int argc, char** argv)
 
 		json::Json loaded = json::load_from_path(parse::json_path);
 
-		if (parse::selected_key.empty())
+		if (parse::selected_key.size() > 0)
 		{
-			std::cout << "no key selected\n";
-			return;
+			json::utils::Node& value = loaded.get_raw(parse::selected_key);
+
+			switch (value.literal_type)
+			{
+			case json::utils::LiteralType::INT: std::cout << std::get<int>(value.literal_value) << "\n"; break;
+			case json::utils::LiteralType::STRING: std::cout << std::get<std::string>(value.literal_value) << "\n"; break;
+			default: std::cout << "unsupported data type\n"; break;
+			}
 		}
-
-		json::utils::Node& value = loaded.get_raw(parse::selected_key);
-
-		switch (value.literal_type)
+		else
 		{
-		case json::utils::LiteralType::INT: std::cout << std::get<int>(value.literal_value) << "\n"; break;
-		case json::utils::LiteralType::STRING: std::cout << std::get<std::string>(value.literal_value) << "\n"; break;
+			switch (loaded[parse::selected_index].index())
+			{
+			case 1: std::cout << std::get<int>(loaded[parse::selected_index]) << "\n"; break;
+			case 0: std::cout << std::get<std::string>(loaded[parse::selected_index]) << "\n"; break;
+			default: std::cout << "unsupported data type\n"; break;
+			}
 		}
 	}
 }
@@ -63,8 +70,9 @@ void args::cmd_parse(int argc, char** argv)
 	int i = 3;
 	while (i < argc)
 	{
-		if (strcmp(argv[i++], "-s") == 0)
+		if (strcmp(argv[i], "-s") == 0)
 		{
+			++i;
 			parse::selected_key = argv_get(argc, argv, i++);
 
 			if (parse::selected_key[0] == '"')
@@ -72,6 +80,11 @@ void args::cmd_parse(int argc, char** argv)
 				parse::selected_key.erase(parse::selected_key.begin());
 				parse::selected_key.erase(parse::selected_key.size() - 1, parse::selected_key.size());
 			}
+		}
+		else if (strcmp(argv[i], "-i") == 0)
+		{
+			++i;
+			parse::selected_index = std::stoi(argv_get(argc, argv, i++));
 		}
 		else
 		{
