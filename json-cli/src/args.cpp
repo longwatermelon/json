@@ -25,7 +25,17 @@ void args::parse_args(int argc, char** argv)
 			{
 			case json::utils::LiteralType::INT: std::cout << std::get<int>(value.literal_value) << "\n"; break;
 			case json::utils::LiteralType::STRING: std::cout << std::get<std::string>(value.literal_value) << "\n"; break;
-			default: std::cout << "unsupported data type\n"; break;
+			case json::utils::LiteralType::LIST:
+			{
+				for (auto& elem : std::get<json::vector>(value.literal_value).get())
+				{
+					switch (elem.index())
+					{
+					case 0: std::cout << std::get<std::string>(elem) << " "; break;
+					case 1: std::cout << std::get<int>(elem) << " "; break;
+					}
+				}
+			} break;
 			}
 		}
 		else
