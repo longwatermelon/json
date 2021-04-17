@@ -1,4 +1,4 @@
 # json
-Json library in c++
+Json library in c++17
 
-Only supports c++17 and above
+Only supports string, int and list
